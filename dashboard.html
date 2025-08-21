@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      display: flex;
+      height: 100vh;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: #fff;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .sidebar a {
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      text-decoration: none;
+      color: white;
+      display: block;
+      transition: 0.3s;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background: #ff416c;
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>🔐 Dashboard</h2>
+    <a href="#" class="active" onclick="showSection('overview')">📊 Overview</a>
+    <a href="#" onclick="showSection('sensitive')">🛠️ Sensitive Info</a>
+    <a href="#" onclick="showSection('settings')">⚙️ Settings</a>
+    <form action="{{ url_for('logout') }}" method="GET" style="margin-top:auto;">
+      <button type="submit" style="width:100%;padding:10px;border:none;background:#ff4b2b;color:white;border-radius:8px;cursor:pointer;">🚪 Logout</button>
+    </form>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Overview -->
+    <div id="overview" class="section">
+      <h1>Welcome, {{ username }} 👋</h1>
+      <div class="card">
+        <p>Last Login: <strong>2025-08-21</strong></p>
+        <p>Role: <strong>Admin</strong></p>
+      </div>
+    </div>
+
+    <!-- Sensitive Info -->
+    <div id="sensitive" class="section" style="display:none;">
+      <h1>Sensitive Information</h1>
+      <div class="card"><strong>API Key:</strong> {{ api_key }}</div>
+      <div class="card"><strong>DB Password:</strong> {{ db_password }}</div>
+      <div class="card"><strong>Server IP:</strong> {{ server_ip }}</div>
+    </div>
+    <!-- Settings -->
+    <div id="settings" class="section" style="display:none;">
+      <h1>Settings</h1>
+      <div class="card">
+        <p>⚙️ Change Password (demo)</p>
+        <button style="padding:8px 15px;border:none;border-radius:6px;background:#ff416c;color:white;cursor:pointer;">Update</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
+      document.getElementById(sectionId).style.display = 'block';
+      document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    // Chart.js Example
+    const ctx = document.getElementById('usageChart');
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+          datasets: [{
+            label: 'API Requests',
+            data: [12, 19, 3, 5, 2, 3, 9],
+            borderColor: '#ffcc00',
+            backgroundColor: 'rgba(255,204,0,0.3)',
+            tension: 0.4,
+            fill: true
+          }]
+        }
+      });
+    }
+  </script>
+</body>
+</html>
+
